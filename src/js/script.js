@@ -62,8 +62,8 @@ class Product {
     console.log('new Product:', thisProduct);
     
     thisProduct.renderInMenu();
-    thisProduct.initAccordion();
     thisProduct.getElmenets();
+    thisProduct.initAccordion();
     thisProduct.initOrderForm();
     thisProduct.processOrder();  
   }
@@ -91,12 +91,12 @@ class Product {
   getElmenets () {
     const thisProduct = this;
 
-  thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-  thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-  //console.log('thisProduct.form', thisProduct.form);
-  thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
-  thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
-  thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+    thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+    thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+    //console.log('thisProduct.form', thisProduct.form);
+    thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+    thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+    thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
 
   }
 
@@ -105,24 +105,21 @@ class Product {
   
     /* find the clickable trigger (the element that should react to clicking) */
 
-    const clickedElement = document.querySelectorAll('select.menuProduct.clickable');
+    const clickedElement = thisProduct.element.querySelector(select.menuProduct.clickable);
 
     /* START: click event listener to trigger */
 
-    let accordionTrigger = document.getElmenetByClassName("select.menuProduct.clickable");
-    clickedElement.addEventListener('click', function(event) {});
-
+    clickedElement.addEventListener('click', function(event) {
       /* prevent default action for event */
 
-      click.preventDefault();
-
+      event.preventDefault();
       /* toggle active class on element of thisProduct */
 
-      clickedElement.add('active');
+      thisProduct.element.classList.toggle('active');
 
       /* find all active products */
 
-      const activeProducts = document.querySelectorAll('.product .active');
+      const activeProducts = document.querySelectorAll('.product.active');
 
       /* START LOOP: for each active product */
 
@@ -130,52 +127,44 @@ class Product {
           
         /* START: if the active product isn't the element of thisProduct */
         
-        if(!thisProduct);
-
+        if (activeProduct !== thisProduct.element) {
           /* remove class active for the active product */
 
-          activeProduct.remove('active');
-
-        /* END: if the active product isn't the element of thisProduct */
-      
-        if(!thisProduct);
-      
-      /* END LOOP: for each active product */
-    }
-    /* END: click event listener to trigger */
+          activeProduct.classList.remove('active');
+        };
+      }
+      /* END: click event listener to trigger */
+    });
   }
-  
-}
- 
-initOrderForm () {
 
-  const thisProduct = this;
-  console.log('initOrderForm:', initOrderForm);
+  initOrderForm () {
 
-  thisProduct.form.addEventListener('submit', function(event){
-    event.preventDefault();
-    thisProduct.processOrder();
-  });
+    const thisProduct = this;
+
+    thisProduct.form.addEventListener('submit', function(event){
+      event.preventDefault();
+      thisProduct.processOrder();
+    });
   
-  for(let input of thisProduct.formInputs){
-    input.addEventListener('change', function(){
+    for(let input of thisProduct.formInputs){
+      input.addEventListener('change', function(){
+        thisProduct.processOrder();
+      });
+    }
+  
+    thisProduct.cartButton.addEventListener('click', function(event){
+      event.preventDefault();
       thisProduct.processOrder();
     });
   }
-  
-  thisProduct.cartButton.addEventListener('click', function(event){
-    event.preventDefault();
-    thisProduct.processOrder();
-  });
-}
 
-processOrder () {
+  processOrder() {
 
-  const thisProduct = this;
-  console.log('processOrder:'. processOrder);
+    const thisProduct = this;
 
-  const formData = utils.serializeFormToObject(thisProduct.form);
-  console.log('formData', formData);
+    const formData = utils.serializeFormToObject(thisProduct.form);
+    console.log('formData', formData);
+  }
 }
   
   const app = {
@@ -210,7 +199,7 @@ processOrder () {
       thisApp.initMenu();
 
     },
-  }
+  };
 
   
   app.init();
