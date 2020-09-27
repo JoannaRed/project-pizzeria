@@ -93,11 +93,10 @@ class Product {
 
     thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
     thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-    //console.log('thisProduct.form', thisProduct.form);
     thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
     thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
     thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-
+    thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
   }
 
   initAccordion (){
@@ -156,7 +155,7 @@ class Product {
       event.preventDefault();
       thisProduct.processOrder();
     });
-  };
+  }
 
   processOrder(){
     const thisProduct = this;
@@ -195,9 +194,7 @@ class Product {
           price += option.price;
 
           /* END IF: if option is selected and option is not default */
-          
-        }
-        
+          }
           /* START ELSE IF: if option is not selected and option is default */
          
           else if (option.default && !optionSelected) {
@@ -208,6 +205,25 @@ class Product {
 
         /* END ELSE IF: if option is not selected and option is default */
       }
+
+      // zapisz obrazki w stalej
+      const activeImages = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+
+      // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
+
+      if(optionSelected){
+        for (activeImage of activeImages) {
+          activeImage.classList.add(classNames.menuProduct.imageVisible);
+        }
+      }  
+        // else jesli opcja jest nie zaznaczona to powinny ja utracic
+        else {
+          for (activeImage of activeImages){
+            activeImage.classList.remove(classNames.menuProduct.imageVisible);
+          }
+
+        } 
+        
       /* END LOOP: for each optionId in param.options */
     }
     /* END LOOP: for each paramId in thisProduct.data.params */
@@ -216,7 +232,7 @@ class Product {
 
     price = thisProduct.priceElem.innerHTML;
 
-  };
+  }
 
   const app = {
     initMenu: function(){
@@ -250,7 +266,7 @@ class Product {
       thisApp.initMenu();
 
     },
-  };
+  }
 
   
   app.init();
