@@ -65,7 +65,9 @@ class Product {
     thisProduct.getElmenets();
     thisProduct.initAccordion();
     thisProduct.initOrderForm();
-    thisProduct.processOrder();  
+    thisProduct.initAmountWidget();
+    thisProduct.processOrder(); 
+    
   }
 
   renderInMenu(){
@@ -97,6 +99,7 @@ class Product {
     thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
     thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+    thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
   }
 
   initAccordion (){
@@ -234,11 +237,28 @@ class Product {
 
   }
 
+  class AmountWidget {
+    constructor(element){
+      const thisWidget = this;
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+
+    }
+
+  }
+
+  initAmountWidget(){
+    const thisProduct = this;
+
+    thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+  }
+
   const app = {
     initMenu: function(){
 
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
+      //console.log('thisApp.data:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
