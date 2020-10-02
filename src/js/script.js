@@ -133,7 +133,7 @@ class Product {
           /* remove class active for the active product */
 
           activeProduct.classList.remove('active');
-        };
+        }
       }
       /* END: click event listener to trigger */
     });
@@ -184,8 +184,7 @@ class Product {
         for (let optionId in param.options) {
 
         /* save the element in param.options with key optionId as const option */
-  
-        const option = thisProduct.param.option[optionId]; 
+        const option = param.options[optionId]; 
 
         /* START IF: if option is selected and option is not default */
 
@@ -215,13 +214,12 @@ class Product {
       // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
 
       if(optionSelected){
-        for (activeImage of activeImages) {
+        for (let activeImage of activeImages) {
           activeImage.classList.add(classNames.menuProduct.imageVisible);
         }
-      }  
-        // else jesli opcja jest nie zaznaczona to powinny ja utracic
-        else {
-          for (activeImage of activeImages){
+      }  else {
+          // else jesli opcja jest nie zaznaczona to powinny ja utracic
+          for (let activeImage of activeImages){
             activeImage.classList.remove(classNames.menuProduct.imageVisible);
           }
 
@@ -233,18 +231,7 @@ class Product {
   }
     /* set the contents of thisProduct.priceElem to be the value of variable price */
 
-    price = thisProduct.priceElem.innerHTML;
-
-  }
-
-  class AmountWidget {
-    constructor(element){
-      const thisWidget = this;
-
-      console.log('AmountWidget:', thisWidget);
-      console.log('constructor arguments:', element);
-
-    }
+    thisProduct.priceElem.innerHTML = price;
 
   }
 
@@ -252,6 +239,28 @@ class Product {
     const thisProduct = this;
 
     thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+  }
+}
+
+  class AmountWidget {
+    constructor(element) {
+      thisWidget.getElements(element);
+      const thisWidget = this;
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+
+    }
+  }
+
+  getElements(element) {
+    const thisWidget = this;
+    
+    thisWidget.element = element;
+    thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+    thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+    thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+
   }
 
   const app = {
@@ -286,7 +295,7 @@ class Product {
       thisApp.initMenu();
 
     },
-  }
+  };
 
   
   app.init();
