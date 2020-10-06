@@ -304,6 +304,7 @@
       thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
       thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
       thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      
     }
 
     setValue(value){
@@ -346,6 +347,40 @@
     }
   }
 
+  class Cart {
+    constructor (element){
+      const thisCart = this;
+
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+
+      console.log('new Cart', thisCart);
+
+      
+    }
+    getElements(element) {
+      const thisCart = this;
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element;
+
+      thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+    }
+
+    initActions(){
+      thisCart = this;
+
+      thisCart.dom.toggleTrigger.addEventListener('click', function (event) {
+        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);        
+      });
+    }
+    
+    
+  }
+
+
   const app = {
     initMenu: function(){
 
@@ -376,6 +411,15 @@
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
+
+    },
+
+    initCart: function () {
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
 
     },
   };
