@@ -1,4 +1,5 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
+/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
 {
   'use strict';
@@ -52,215 +53,270 @@
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
   };
 
-class Product {
-  constructor(id, data){
-    const thisProduct = this;
+  class Product{
+    constructor(id, data){
+      const thisProduct = this;
 
-    thisProduct.id = id;
-    thisProduct.data = data;
+      thisProduct.id = id;
+      thisProduct.data = data;
     
-    console.log('new Product:', thisProduct);
+      console.log('new Product:', thisProduct);
     
-    thisProduct.renderInMenu();
-    thisProduct.getElmenets();
-    thisProduct.initAccordion();
-    thisProduct.initOrderForm();
-    thisProduct.initAmountWidget();
-    thisProduct.processOrder(); 
+      thisProduct.renderInMenu();
+      thisProduct.getElmenets();
+      thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
+      thisProduct.processOrder(); 
     
-  }
+    }
 
-  renderInMenu(){
-    const thisProduct = this;
+    renderInMenu(){
+      const thisProduct = this;
   
-  // wygenerować kod HTML pojedynczego produktu,
+      // wygenerować kod HTML pojedynczego produktu,
   
-  const generatedHTML = templates.menuProduct(thisProduct.data);
+      const generatedHTML = templates.menuProduct(thisProduct.data);
   
-  //stworzyć element DOM na podstawie tego kodu produktu,
+      //stworzyć element DOM na podstawie tego kodu produktu,
   
-  thisProduct.element = utils.createDOMFromHTML(generatedHTML);
+      thisProduct.element = utils.createDOMFromHTML(generatedHTML);
 
-  // znaleźć na stronie kontener menu,
+      // znaleźć na stronie kontener menu,
   
-  const menuContainer = document.querySelector(select.containerOf.menu);  
+      const menuContainer = document.querySelector(select.containerOf.menu);  
 
-  //  wstawić stworzony element DOM do znalezionego kontenera menu.
+      //  wstawić stworzony element DOM do znalezionego kontenera menu.
   
-  menuContainer.appendChild(thisProduct.element);
-  }
+      menuContainer.appendChild(thisProduct.element);
+    }
 
-  getElmenets () {
-    const thisProduct = this;
+    getElmenets () {
+      const thisProduct = this;
 
-    thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-    thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-    thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
-    thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
-    thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-    thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-    thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
-  }
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+    }
 
-  initAccordion (){
-    const thisProduct = this;  
+    initAccordion (){
+      const thisProduct = this;  
   
-    /* find the clickable trigger (the element that should react to clicking) */
+      /* find the clickable trigger (the element that should react to clicking) */
 
-    const clickedElement = thisProduct.element.querySelector(select.menuProduct.clickable);
+      const clickedElement = thisProduct.element.querySelector(select.menuProduct.clickable);
 
-    /* START: click event listener to trigger */
+      /* START: click event listener to trigger */
 
-    clickedElement.addEventListener('click', function(event) {
+      clickedElement.addEventListener('click', function(event) {
       /* prevent default action for event */
 
-      event.preventDefault();
-      /* toggle active class on element of thisProduct */
+        event.preventDefault();
+        /* toggle active class on element of thisProduct */
 
-      thisProduct.element.classList.toggle('active');
+        thisProduct.element.classList.toggle('active');
 
-      /* find all active products */
+        /* find all active products */
 
-      const activeProducts = document.querySelectorAll('.product.active');
+        const activeProducts = document.querySelectorAll('.product.active');
 
-      /* START LOOP: for each active product */
+        /* START LOOP: for each active product */
 
-      for(let activeProduct of activeProducts) {
+        for(let activeProduct of activeProducts) {
           
-        /* START: if the active product isn't the element of thisProduct */
+          /* START: if the active product isn't the element of thisProduct */
         
-        if (activeProduct !== thisProduct.element) {
+          if (activeProduct !== thisProduct.element) {
           /* remove class active for the active product */
 
-          activeProduct.classList.remove('active');
+            activeProduct.classList.remove('active');
+          }
         }
-      }
-      /* END: click event listener to trigger */
-    });
-  }
+        /* END: click event listener to trigger */
+      });
+    }
 
-  initOrderForm () {
+    initOrderForm () {
 
-    const thisProduct = this;
+      const thisProduct = this;
 
-    thisProduct.form.addEventListener('submit', function(event){
-      event.preventDefault();
-      thisProduct.processOrder();
-    });
+      thisProduct.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
   
-    for(let input of thisProduct.formInputs){
-      input.addEventListener('change', function(){
+      for(let input of thisProduct.formInputs){
+        input.addEventListener('change', function(){
+          thisProduct.processOrder();
+        });
+      }
+  
+      thisProduct.cartButton.addEventListener('click', function(event){
+        event.preventDefault();
         thisProduct.processOrder();
       });
     }
+
+    processOrder(){
+      const thisProduct = this;
   
-    thisProduct.cartButton.addEventListener('click', function(event){
-      event.preventDefault();
-      thisProduct.processOrder();
-    });
-  }
-
-  processOrder(){
-    const thisProduct = this;
+      /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
   
-    /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
+      const formData = utils.serializeFormToObject(thisProduct.form);
+
+      /* set variable price to equal thisProduct.data.price */
+
+      let price = thisProduct.data.price;
   
-    const formData = utils.serializeFormToObject(thisProduct.form);
+      /* START LOOP: for each paramId in thisProduct.data.params */
 
-    /* set variable price to equal thisProduct.data.price */
+      for (let paramId in thisProduct.data.params) {
 
-    let price = thisProduct.data.price;
-  
-    /* START LOOP: for each paramId in thisProduct.data.params */
+        /* save the element in thisProduct.data.params with key paramId as const param */
 
-    for (let paramId in thisProduct.data.params) {
-
-      /* save the element in thisProduct.data.params with key paramId as const param */
-
-      const param = thisProduct.data.params[paramId];
+        const param = thisProduct.data.params[paramId];
 
         /* START LOOP: for each optionId in param.options */
         
         for (let optionId in param.options) {
 
-        /* save the element in param.options with key optionId as const option */
-        const option = param.options[optionId]; 
+          /* save the element in param.options with key optionId as const option */
+          const option = param.options[optionId]; 
 
-        /* START IF: if option is selected and option is not default */
+          /* START IF: if option is selected and option is not default */
 
-        const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
-        if (optionSelected && !option.default) {
+          const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
+          if (optionSelected && !option.default) {
 
-          /* add price of option to variable price */
+            /* add price of option to variable price */
         
-          price += option.price;
+            price += option.price;
 
-          /* END IF: if option is selected and option is not default */
+            /* END IF: if option is selected and option is not default */
           }
           /* START ELSE IF: if option is not selected and option is default */
          
           else if (option.default && !optionSelected) {
          
-          /* deduct price of option from price */
+            /* deduct price of option from price */
         
-          price -= option.price;  
+            price -= option.price;  
 
-        /* END ELSE IF: if option is not selected and option is default */
-      }
-
-      // zapisz obrazki w stalej
-      const activeImages = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
-
-      // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
-
-      if(optionSelected){
-        for (let activeImage of activeImages) {
-          activeImage.classList.add(classNames.menuProduct.imageVisible);
-        }
-      }  else {
-          // else jesli opcja jest nie zaznaczona to powinny ja utracic
-          for (let activeImage of activeImages){
-            activeImage.classList.remove(classNames.menuProduct.imageVisible);
+          /* END ELSE IF: if option is not selected and option is default */
           }
 
-        } 
+          // zapisz obrazki w stalej
+          const activeImages = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+
+          // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
+
+          if(optionSelected){
+            for (let activeImage of activeImages) {
+              activeImage.classList.add(classNames.menuProduct.imageVisible);
+            }
+          }  else {
+          // else jesli opcja jest nie zaznaczona to powinny ja utracic
+            for (let activeImage of activeImages){
+              activeImage.classList.remove(classNames.menuProduct.imageVisible);
+            }
+
+          } 
         
-      /* END LOOP: for each optionId in param.options */
+        /* END LOOP: for each optionId in param.options */
+        }
+      /* END LOOP: for each paramId in thisProduct.data.params */
+      }
+
+      /*multiply price by amount*/
+
+      price *= thisProduct.amountWidget.value;
+
+      /* set the contents of thisProduct.priceElem to be the value of variable price */
+
+      thisProduct.priceElem.innerHTML = price;
+
+    } 
+
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+
+      thisProduct.amountWidgetElem.addEventListener('updated', function(){
+        thisProduct.processOrder();
+      });
     }
-    /* END LOOP: for each paramId in thisProduct.data.params */
-  }
-    /* set the contents of thisProduct.priceElem to be the value of variable price */
-
-    thisProduct.priceElem.innerHTML = price;
-
   }
 
-  initAmountWidget(){
-    const thisProduct = this;
-
-    thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-  }
-}
+  
 
   class AmountWidget {
     constructor(element) {
-      thisWidget.getElements(element);
+      
       const thisWidget = this;
 
+      thisWidget.getElements(element);
+      thisWidget.value = settings.amountWidget.defaultValue;
+      thisWidget.setValue(thisWidget.input.value);
+      
+      
+      
       console.log('AmountWidget:', thisWidget);
       console.log('constructor arguments:', element);
+  
+    }
+
+    getElements(element) {
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+
+    setValue(value){
+      const thisWidget = this;
+
+      const newValue = parseInt(value);
+      
+      
+      /*ToDo add validation*/
+
+      if ((thisWidget.value != value) && (thisWidget.value >= settings.amountWidget.defaultMin) && (thisWidget.value <= settings.amountWidget.defaultMax ))   {
+        thisWidget.value = newValue;
+        thisWidget.announce();
+      
+      }
+      thisWidget.input.value = thisWidget.value;
+    } 
+    
+    initActions() {
+      const thisWidget = this;
+      thisWidget.input.addEventListener('change', function () {
+        thisWidget.setValue(thisWidget.input.value);
+      });
+      thisWidget.linkDecrease.addEventListener('click', function (event) {
+        event.preventDefault();
+        thisWidget.setValue((thisWidget.value) - 1);
+      });
+      thisWidget.linkIncrease.addEventListener('click', function (event) {
+        event.preventDefault();
+        thisWidget.setValue((thisWidget.value) + 1);
+      });
+    }
+
+
+    announce (){
+      const thisWidget = this;
+      const event = new Event ('updated');
+      thisWidget.element.dispatchEvent(event);
 
     }
-  }
-
-  getElements(element) {
-    const thisWidget = this;
-    
-    thisWidget.element = element;
-    thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-    thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
-    thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
-
   }
 
   const app = {
