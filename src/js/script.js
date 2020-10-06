@@ -287,7 +287,7 @@
       
       /*ToDo add validation*/
 
-      if ((thisWidget.value != value) && (thisWidget.value >= settings.amountWidget.defaultMin) && (thisWidget.value <= settings.amountWidget.defaultMax ))   {
+      if ((thisWidget.value != value) && (newValue >= settings.amountWidget.defaultMin) && (newValue <= settings.amountWidget.defaultMax ))   {
         thisWidget.value = newValue;
         thisWidget.announce();
       
