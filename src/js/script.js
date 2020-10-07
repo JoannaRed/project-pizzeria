@@ -68,10 +68,12 @@
       defaultValue: 1,
       defaultMin: 1,
       defaultMax: 9,
-    },
+    }, 
+    
     cart: {
       defaultDeliveryFee: 20,
     },
+    
   };
 
   const templates = {
@@ -370,9 +372,11 @@
     }
 
     initActions(){
-      thisCart = this;
+      const thisCart = this;
 
       thisCart.dom.toggleTrigger.addEventListener('click', function (event) {
+        event.preventDefault();
+
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);        
       });
     }
