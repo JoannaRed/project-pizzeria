@@ -1,5 +1,8 @@
+/* global Handlebars, dataSource */
+
+
 const utils = {}; // eslint-disable-line no-unused-vars
-/* global Handlebars */
+
 
 
 utils.createDOMFromHTML = function(htmlString) {
