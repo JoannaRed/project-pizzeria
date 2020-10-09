@@ -195,7 +195,8 @@
       const thisProduct = this;
   
       /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
-  
+      thisProduct.parms = {};
+
       const formData = utils.serializeFormToObject(thisProduct.form);
 
       /* set variable price to equal thisProduct.data.price */
@@ -245,6 +246,14 @@
           // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
 
           if(optionSelected){
+            if(!thisProduct.params[paramId]) {
+              thisProduct.params[paramId] = {
+                label: param.label,
+                options: {},
+              };
+            }
+            thisProduct.params[paramId].options[optionId] = option.label;
+
             for (let activeImage of activeImages) {
               activeImage.classList.add(classNames.menuProduct.imageVisible);
             }
@@ -263,11 +272,13 @@
 
       /*multiply price by amount*/
 
-      price *= thisProduct.amountWidget.value;
+      Product.priceSingle = price;
+      thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
+
 
       /* set the contents of thisProduct.priceElem to be the value of variable price */
 
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.priceElem.innerHTML = thisProduct.price;
 
     } 
 
