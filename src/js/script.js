@@ -193,9 +193,9 @@
 
     processOrder(){
       const thisProduct = this;
+      thisProduct.parms = {};
   
       /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
-      thisProduct.parms = {};
 
       const formData = utils.serializeFormToObject(thisProduct.form);
 
@@ -204,7 +204,6 @@
       let price = thisProduct.data.price;
   
       /* START LOOP: for each paramId in thisProduct.data.params */
-
       for (let paramId in thisProduct.data.params) {
 
         /* save the element in thisProduct.data.params with key paramId as const param */
@@ -219,16 +218,17 @@
           const option = param.options[optionId]; 
 
           /* START IF: if option is selected and option is not default */
-
+      
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
           if (optionSelected && !option.default) {
-
+            
             /* add price of option to variable price */
         
             price += option.price;
 
             /* END IF: if option is selected and option is not default */
           }
+        
           /* START ELSE IF: if option is not selected and option is default */
          
           else if (option.default && !optionSelected) {
@@ -239,21 +239,20 @@
 
           /* END ELSE IF: if option is not selected and option is default */
           }
-
+        
           // zapisz obrazki w stalej
           const activeImages = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
 
           // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
-
           if(optionSelected){
-            if(!thisProduct.params[paramId]) {
-              thisProduct.params[paramId] = {
+            if(!thisProduct.data.params[paramId]) {
+              thisProduct.data.params[paramId] = {
                 label: param.label,
                 options: {},
               };
             }
-            thisProduct.params[paramId].options[optionId] = option.label;
-
+            thisProduct.data.params[paramId].options[optionId] = option.label;
+            
             for (let activeImage of activeImages) {
               activeImage.classList.add(classNames.menuProduct.imageVisible);
             }
@@ -264,12 +263,13 @@
             }
 
           } 
+
+        } 
         
         /* END LOOP: for each optionId in param.options */
-        }
-      /* END LOOP: for each paramId in thisProduct.data.params */
       }
-
+      /* END LOOP: for each paramId in thisProduct.data.params */
+         
       /*multiply price by amount*/
 
       Product.priceSingle = price;
@@ -279,8 +279,8 @@
       /* set the contents of thisProduct.priceElem to be the value of variable price */
 
       thisProduct.priceElem.innerHTML = thisProduct.price;
-
-    } 
+    }    
+     
 
     initAmountWidget(){
       const thisProduct = this;
@@ -295,13 +295,15 @@
     addToCart(){
       const thisProduct = this;
 
+      thisProduct.name = thisProduct.data.name;
+      thisProduct.amount = thisProduct.amountWidget.value;
+
       app.cart.add(thisProduct);
 
     }
   }
 
   
-
   class AmountWidget {
     constructor(element) {
       
