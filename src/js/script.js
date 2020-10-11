@@ -245,14 +245,6 @@
 
           // start if jesli opcja jest zazanczona to wszystkie obrazki powinny dostac klase ..
           if(optionSelected){
-            if(!thisProduct.data.params[paramId]) {
-              thisProduct.data.params[paramId] = {
-                label: param.label,
-                options: {},
-              };
-            }
-            thisProduct.data.params[paramId].options[optionId] = option.label;
-            
             for (let activeImage of activeImages) {
               activeImage.classList.add(classNames.menuProduct.imageVisible);
             }
@@ -261,8 +253,7 @@
             for (let activeImage of activeImages){
               activeImage.classList.remove(classNames.menuProduct.imageVisible);
             }
-
-          } 
+          }
 
         } 
         
