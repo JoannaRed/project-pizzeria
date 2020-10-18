@@ -1,7 +1,7 @@
-import {settings, select, classNames} from '../settings.js';
-import Product from '../components/Product.js';
-import Cart from '../components/Cart.js';
-import Booking from '../components/Booking.js';
+import {settings, select, classNames} from './settings.js';
+import Product from './components/Product.js';
+import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
 
 const app = {
@@ -50,11 +50,7 @@ const app = {
 
     /*add class active to matching pages, remove from non-matching*/ 
     for(let page of thisApp.pages){
-      //if(page.id == pageId){
-      //  page.classList.add(classNames.pages.active);
-      //} else{
-      //  page.classList.remove(classNames.pages.active);
-      //}
+      
 
       page.classList.toggle(classNames.pages.active, page.id == pageId);
     }
@@ -107,9 +103,10 @@ const app = {
 
 
   initBooking: function(){
+    
     const thisApp = this;
     const reservationWidget = document.querySelector(select.containerOf.booking);
-
+    
     thisApp.booking = new Booking(reservationWidget);
 
   },

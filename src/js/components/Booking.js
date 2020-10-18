@@ -1,7 +1,6 @@
 import {templates, select} from '../settings.js';
-import { utils } from '../utils.js';
-import { AmountWidget } from './AmountWidget.js';
-/*Global Handlebars*/ 
+import utils from '../utils.js';
+import AmountWidget from './AmountWidget.js';
 
 export class Booking {
   constructor(element){
@@ -18,10 +17,14 @@ export class Booking {
 
     thisBooking.dom = {};
 
+    utils.createDOMFromHTML(generatedHTML);
+
     thisBooking.dom.wrapper = element;
-    thisBooking.generatedDOM = utils.createDOMFromHTML(generatedHTML);
-    thisBooking.dom.peopleAmount = thisBooking.generatedDOM.querySelector(select.booking.peopleAmount);
-    thisBooking.dom.hoursAmount = thisBooking.generatedDOM.querySelector(select.booking.hoursAmount);
+    thisBooking.dom.wrapper.appendChild(utils.createDOMFromHTML(generatedHTML));
+    thisBooking.dom.peopleAmount = thisBooking.dom.wrapper.querySelector(select.booking.peopleAmount);
+    thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
+    //thisBooking.appendChild(thisBooking.generatedDOM);
+
   }
 
   initWidget() {
