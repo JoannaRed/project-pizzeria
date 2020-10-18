@@ -1,4 +1,5 @@
-import Handlebars from '../index.js';
+/* global Handlebars */
+
 
 
 export const select = {
